@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Binary Converter | PyScript</title>
+    
+    <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS Variables for Consistent Theming */
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --focus-ring: rgba(59, 130, 246, 0.15);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        /* Reset & Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-color);
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* Card Container */
+        .app-container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 640px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .app-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #fcfcfd;
+        }
+
+        .app-header h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-header p {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Main Body */
+        .app-body {
+            padding: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        /* Textareas */
+        textarea {
+            width: 100%;
+            height: 140px;
+            padding: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            color: var(--text-main);
+            background-color: #ffffff;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+
+        textarea::placeholder {
+            color: #94a3b8;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+
+        #outputText {
+            font-family: var(--font-mono);
+            background-color: #f8fafc;
+            color: #334155;
+            font-size: 0.875rem;
+        }
+
+        /* Button Layout */
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            flex: 2;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-hover);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-ghost:hover {
+            background-color: #fef2f2;
+            border-color: #fca5a5;
+        }
+
+        /* SVG Icons */
+        svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .button-group {
+                flex-direction: column;
+            }
+            .app-body {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="app-header">
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                Pro Binary Converter
+            </h1>
+            <p>Convert plain text into strictly formatted 8-bit binary strings.</p>
+        </div>
+
+        <div class="app-body">
+            
+            <div class="input-group">
+                <div class="input-header">
+                    <label for="inputText">Standard Text</label>
+                    <button class="btn-ghost" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" py-click="clear_fields">Clear</button>
+                </div>
+                <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+            </div>
+
+            <div class="button-group" style="margin-bottom: 1.5rem;">
+                <button class="btn-primary" py-click="convert_to_binary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                    Convert to Binary
+                </button>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 0;">
+                <label for="outputText" style="margin-bottom: 0.5rem; display: block;">Binary Output</label>
+                <textarea id="outputText" readonly placeholder="01100010 01101001 01101110 01100001 01110010 01111001"></textarea>
+            </div>
+
+            <div class="button-group">
+                <button id="copyBtn" class="btn-success" style="width: 100%;" py-click="copy_binary">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
+                    </svg>
+                    <span>Copy to Clipboard</span>
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="py">
+        from pyscript import document, window
+        import asyncio
+
+        def convert_to_binary(event):
+            input_element = document.querySelector("#inputText")
+            text = input_element.value
+
+            if not text:
+                document.querySelector("#outputText").value = ""
+                return
+
+            binary_list = [format(ord(char), '08b') for char in text]
+            binary_result = " ".join(binary_list)
+
+            output_element = document.querySelector("#outputText")
+            output_element.value = binary_result
+
+        def clear_fields(event):
+            # Clears both input and output textareas
+            document.querySelector("#inputText").value = ""
+            document.querySelector("#outputText").value = ""
+
+        async def copy_binary(event):
+            output_element = document.querySelector("#outputText")
+            text = output_element.value
+            
+            if text:
+                window.navigator.clipboard.writeText(text)
+                
+                # Grab the span inside the button to change the text without losing the SVG icon
+                btn_span = event.target.querySelector("span") 
+                if not btn_span:
+                    btn_span = event.target # Fallback if they click exactly on the text
+
+                original_text = btn_span.innerText
+                btn_span.innerText = "Copied!"
+                
+                await asyncio.sleep(2)
+                btn_span.innerText = original_text
+    </script>
+
+</body>
+</html>
